@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Regent Ready Registration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="node_modules/vee-validate/dist/vee-validate.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+</head>
+<body>
+  <div class="container">
+
+    <div class="jumbotron">
+        <h1>Regent Ready Registration</h1>
+        <p>Registration for the upcoming stem camp</p>
+    </div>
+
+    <div class="card mb-3"
+      v-for="(registrant, index) in registrants">
+      <div class="card-body">
+
+        <span class="float-right" style="cursor: pointer"
+          @click="deleteEmployeeForm(index)">
+          X
+        </span>
+        
+        <h4 class="card-title">Registrant      {{ index+1 }}</h4>
+        <div class="registrant-form">
+
+          <div class="form-group" :class="{'has-error': errors.has('full name') }" >
+            <label class="control-label" for="full name">Name</label>
+            <input type="text" 
+                   class="form-control mb-2" 
+                   placeholder="Name" 
+                   name="full name"
+                   v-model="registrant.Name" 
+                   v-validate="{required: true}"
+                   autocomplete="name">
+              <span v-if="errors.has('full name')">
+                  {{ errors.first('full name') }}
+              </span>
+          </div>
+          
+          <div class="form-group" :class="{'has-error': errors.has('birth day') }" >
+            <label class="control-label" for="birth day">Date of Birth</label>
+            <input type="date" 
+                   class="form-control mb-2"
+                   placeholder="Date Of Birth" 
+                   name="birth day"
+                   v-model="registrant.DOB" 
+                   v-validate="{required:true}"
+                   autocomplete="bday">
+                <span v-if="errors.has('birth day')">
+                  {{ errors.first('birth day') }}
+                </span>
+          </div>
+
+          <div class="form-group" :class="{'has-error': errors.has('phone number') }" >
+            <label class="control-label" for="phone number">Phone Number</label>
+            <input type="phone"
+                   class="form-control mb-2" 
+                   placeholder="xxx-xxx-xxxx" 
+                   name="phone number"
+                   v-model="registrant.PhoneNumber" 
+                   v-validate="{ required: true, regex: /[2-9][0-9]{2}[-]?[0-9]{3}[-]?[0-9]{4}/ }" 
+                   name="regex"
+                   autocomplete="tel">
+              <span v-if="errors.has('phone number')">
+                {{ errors.first('phone number') }}
+              </span>
+          </div>
+
+          <div class="form-group" :class="{'has-error': errors.has('email') }" >
+            <label class="control-label" for="email">Email</label>
+            <input type="text" 
+                   class="form-control mb-2" 
+                   placeholder="Email" 
+                   name="email"
+                   v-model="registrant.Email" 
+                   v-validate="'required|email'"
+                   autocomplete="email">
+                <span v-if="errors.has('email')">
+                  {{ errors.first('email') }}
+                </span>
+          </div>
+
+          <div class="form-group" :class="{'has-error': errors.has('Street Address') }" >
+            <label class="control-label" for="StreetAddress">Street Address</label>
+            <input type="text" 
+                   class="form-control mb-2" 
+                   placeholder="Street Address" 
+                   name="Street Address"
+                   v-model="registrant.StreetAddress" 
+                   v-validate="{required:true}"
+                   autocomplete="shipping street-address">
+                <span v-if="errors.has('Street Address')">
+                  {{ errors.first('Street Address') }}
+                </span>
+          </div>
+
+           <div class="form-group" :class="{'has-error': errors.has('City') }" >
+            <label class="control-label" for="City">City</label>
+            <input type="text" 
+                   class="form-control mb-2" 
+                   placeholder="City" 
+                   name="City"
+                   v-model="registrant.City" 
+                   v-validate="{required:true, max:46}" 
+                   autocomplete="shipping address-level2">
+                <span v-if="errors.has('City')">
+                  {{ errors.first('City') }}
+                </span>
+          </div>
+
+          <div class="form-group" :class="{'has-error': errors.has('State') }" >
+            <label class="control-label" for="State">State</label>
+            <input type="text" 
+                   class="form-control mb-2" 
+                   placeholder="State" 
+                   name="State"
+                   v-model="registrant.State" 
+                   v-validate="{required:true, max:25}" 
+                   autocomplete="shipping address-level1">
+                <span v-if="errors.has('State')">
+                  {{ errors.first('State') }}
+                </span>
+          </div>
+          <div class="form-group" :class="{'has-error': errors.has('ZipCode') }" >
+            <label class="control-label" for="ZipCode">ZipCode</label>
+            <input type="text" 
+                   class="form-control mb-2" 
+                   placeholder="xxxxx-xxxx" 
+                   name="ZipCode"
+                   v-model="registrant.ZipCode" 
+                   v-validate="{required:true, regex: /^[0-9]{5}(?:-[0-9]{4})?$/ }" 
+                   autocomplete="shipping postal-code">
+                <span v-if="errors.has('ZipCode')">
+                  {{ errors.first('ZipCode') }}
+                </span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  <button class="btn btn-success mt-4 mb-4"
+    @click="addNewRegistrantForm">
+    Add Another Registrant
+  </button>
+  <button v-if="distb()" :disabled="errors.any()" class="btn btn-success mt-5 mb-5"
+    @click="submitForm">
+    <span v-if="ajaxRequest">Please Wait ...</span>
+    <span v-else="ajaxRequest">Submit</span>
+  </button>
+  <p style="padding:5px"> {{ $data }}</p>
+</div>
+<script src="main.js"></script>
+</body>
+</html>
