@@ -1,0 +1,7 @@
+.jumbotron{
+  background-color: #00833F;
+  color: #FFF;
+}
+.has-error{
+  color: rgba(192, 37, 37, 0.836)
+}
