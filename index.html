@@ -27,7 +27,7 @@
           X
         </span>
         
-        <h4 class="card-title">Registrant      {{ index+1 }}</h4>
+        <h4 class="card-title">Registrant<span v-if="index > 0">     {{ index+1 }}<span></h4>
         <div class="registrant-form">
 
           <div class="form-group" :class="{'has-error': errors.has('full name') }" >
