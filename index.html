@@ -13,23 +13,35 @@
 <body>
   <div class="container">
 
+    <!-- Jumbotron contains the primary header elements -->
     <div class="jumbotron">
         <h1>Regent Ready Registration</h1>
         <p>Registration for the upcoming stem camp</p>
     </div>
 
+    <!--For each registrant generates a new form
+        Controlled by addNewRegistrant() -->
     <div class="card mb-3"
       v-for="(registrant, index) in registrants">
       <div class="card-body">
 
+        <!--Close the current card utilizing the deleteEmployee(index)-->
         <span class="float-right" style="cursor: pointer"
           @click="deleteEmployeeForm(index)">
           X
         </span>
         
+        <!--Card Title shows the index number only if the index is more than 1-->
         <h4 class="card-title">Registrant<span v-if="index > 0">     {{ index+1 }}<span></h4>
+        
+        <!--Start of form
+            Form uses autocomplete as defined by html5 standard-->
         <div class="registrant-form">
 
+          <!--Full Name
+              Required field of type text
+              Modifies Registrant Name Field
+              Throws error if field is not filled-->
           <div class="form-group" :class="{'has-error': errors.has('full name') }" >
             <label class="control-label" for="full name">Name</label>
             <input type="text" 
@@ -44,6 +56,12 @@
               </span>
           </div>
           
+          <!--Date of Birth
+              Required field of type date mm-dd-yyyy
+              Output as yyyy-mm-dd
+              Modifies Registrant DOB
+              Throws error if field is not filled or invalid
+              Uses native calander-->
           <div class="form-group" :class="{'has-error': errors.has('birth day') }" >
             <label class="control-label" for="birth day">Date of Birth</label>
             <input type="date" 
@@ -58,6 +76,12 @@
                 </span>
           </div>
 
+          <!--Phone Number
+              Required field of type text 
+              Valid formats xxx-xxx-xxxx xxxxxxxxx
+              Only accepts area codes > 200 && < 999
+              Modifies Registrant PhoneNumber field
+              Throws error if field is not filled or invalid-->
           <div class="form-group" :class="{'has-error': errors.has('phone number') }" >
             <label class="control-label" for="phone number">Phone Number</label>
             <input type="phone"
@@ -73,6 +97,10 @@
               </span>
           </div>
 
+          <!--Email
+              Required field of type email
+              Modifies Registrant Email Field
+              Throws error if field is not filled or invalid-->
           <div class="form-group" :class="{'has-error': errors.has('email') }" >
             <label class="control-label" for="email">Email</label>
             <input type="text" 
@@ -87,6 +115,10 @@
                 </span>
           </div>
 
+          <!--Street Address
+              Required field of type email
+              Modifies Registrant StreetAddress Field
+              Throws error if field is not filled or invalid-->
           <div class="form-group" :class="{'has-error': errors.has('Street Address') }" >
             <label class="control-label" for="StreetAddress">Street Address</label>
             <input type="text" 
@@ -101,6 +133,12 @@
                 </span>
           </div>
 
+          <!--City
+              Required field of type text
+              Modifies Registrant City
+              Validates to less than 46 char's 
+                longest city name in the US
+              Throws error if field is not filled or invalid-->
            <div class="form-group" :class="{'has-error': errors.has('City') }" >
             <label class="control-label" for="City">City</label>
             <input type="text" 
@@ -115,6 +153,12 @@
                 </span>
           </div>
 
+          <!--State
+              Required field of type text
+              Modifies Registrant State
+              Validates to less than State char's 
+                longest state name in the US
+              Throws error if field is not filled or invalid-->
           <div class="form-group" :class="{'has-error': errors.has('State') }" >
             <label class="control-label" for="State">State</label>
             <input type="text" 
@@ -128,6 +172,12 @@
                   {{ errors.first('State') }}
                 </span>
           </div>
+
+          <!--ZipCode
+              Required field of type text
+              Modifies Registrant ZipCode
+              Validates to xxxxx-xxxx or xxxxx
+              Throws error if field is not filled or invalid-->
           <div class="form-group" :class="{'has-error': errors.has('ZipCode') }" >
             <label class="control-label" for="ZipCode">ZipCode</label>
             <input type="text" 
@@ -145,10 +195,19 @@
         </div>
       </div>
     </div>
+  <!--Adds another registrant form-->
   <button class="btn btn-success mt-4 mb-4"
     @click="addNewRegistrantForm">
     Add Another Registrant
   </button>
+
+  <!--Submit button
+      Checks to ensure all fields are valid
+        if invalid disables the button and throws appropriate errors
+      Starts ajaxReqeust, disables button, replaces submit with please wait...
+        on sucessful submit removes button permanantly 
+        (stores bit in persistant memory)
+    -->
   <button v-if="distb()" :disabled="errors.any()" class="btn btn-success mt-5 mb-5"
     @click="submitForm">
     <span v-if="ajaxRequest">Please Wait ...</span>
