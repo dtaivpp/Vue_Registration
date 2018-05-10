@@ -16,6 +16,7 @@ exports.handler = function(evt, context, callback) {
     const today = new Date();
     const todayString = today.toISOString();
 
+  // Setup params to check current registration numbers
   var requestParams = {
     TableName: "RegistrationTotals",
     Key:{
@@ -27,15 +28,21 @@ exports.handler = function(evt, context, callback) {
     if(err){
       console.log(err,err.stack);
     } else {
-      if((requestedData.Item.Total + data.registrants.length()) > 30){
-        data.TableName = "waitlistedRegistrants";
-      } else {
-        data.TableName = "ActiveRegistrants";
-      }
+        // For loop to iterate through entries
+        if((requestedData.Item.Total + data.registrants.length()) > 30){
+          data.TableName = "waitlistedRegistrants";
+        } else {
+          data.TableName = "ActiveRegistrants";
+        }
+      //
       putElements(getParams());
     }
   });
 
+
+  // Sends parameters for the put item
+  // Input: index of registrant to put
+  // Output: Parameters object for put
   function getParams(){
     var params = {
       TableName: data.TableName,
@@ -54,6 +61,8 @@ exports.handler = function(evt, context, callback) {
     return params;
   };
 
+  // Executes put on requested table
+  // If there is an error it will send the appropriate error
   function putElements(params){
     // Call DynamoDB to add the item to the table
     ddb.putItem(params, function(err, data) {
